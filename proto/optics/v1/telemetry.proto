@@ -1,0 +1,13 @@
+syntax = "proto3";
+package optics.v1;
+
+message TelemetrySample {
+  int64 ts_unix_ms = 1;
+  string link_id = 2;
+  string channel_id = 3;
+  double osnr_db = 4;
+  double ber = 5;
+  double laser_bias_ma = 6;
+  double edfa_pump_ma = 7;
+  double rx_power_dbm = 8;
+}

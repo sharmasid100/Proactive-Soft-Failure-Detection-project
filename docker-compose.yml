@@ -1,0 +1,96 @@
+services:
+  path_manager:
+    build:
+      context: .
+    image: optics-softfail-python
+    command: ["python", "-m", "apps.path_manager.main"]
+    environment:
+      PATH_MANAGER_HOST: 0.0.0.0
+      PATH_MANAGER_REST_PORT: "8080"
+      PATH_MANAGER_GRPC_PORT: "8081"
+      REROUTE_LOG: /tmp/reroutes.jsonl
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8080/health').read()"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+
+  healer:
+    build:
+      context: .
+    image: optics-softfail-python
+    command: ["python", "-m", "apps.healer.main"]
+    depends_on:
+      path_manager:
+        condition: service_healthy
+    environment:
+      HEALER_HOST: 0.0.0.0
+      HEALER_PORT: "8091"
+      PATH_MANAGER_REST: http://path_manager:8080
+      PATH_MANAGER_GRPC: path_manager:8081
+    ports:
+      - "8091:8091"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8091/health').read()"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+
+  infer:
+    build:
+      context: .
+    image: optics-softfail-python
+    command: ["python", "-m", "apps.infer.main"]
+    depends_on:
+      healer:
+        condition: service_healthy
+    environment:
+      INFER_LISTEN_HOST: 0.0.0.0
+      INFER_LISTEN_PORT: "9001"
+      INFER_API_PORT: "8090"
+      HEALER_URL: http://healer:8091
+      MODELS_DIR: /app/models
+    ports:
+      - "9001:9001"
+      - "8090:8090"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8090/health').read()"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  ingest:
+    build:
+      context: ./apps/ingest_cpp
+    image: optics-softfail-ingest
+    command: ["--listen", "0.0.0.0:9000", "--downstream", "infer:9001"]
+    depends_on:
+      infer:
+        condition: service_healthy
+    ports:
+      - "9000:9000"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/9000"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 3s
+
+  producer:
+    build:
+      context: .
+    image: optics-softfail-python
+    command: ["python", "-m", "apps.producer.main", "stream", "--host", "ingest", "--port", "9000", "--demo"]
+    depends_on:
+      ingest:
+        condition: service_healthy
+    environment:
+      OPTICS_DEMO: "1"
+      INGEST_HOST: ingest
+      INGEST_PORT: "9000"

@@ -1,0 +1,14 @@
+.venv/
+.git/
+.cache/
+__pycache__/
+*.pyc
+build/
+apps/ingest_cpp/build/
+cmake-build-*/
+generated/
+data/synthetic/*.parquet
+data/synthetic/*.csv
+data/synthetic/*.jsonl
+.pytest_cache/
+.DS_Store

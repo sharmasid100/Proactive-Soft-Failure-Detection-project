@@ -1,0 +1,16 @@
+paths:
+  P_work_L1:
+    links: [L1]
+    role: working
+    capacity: 1
+  P_prot_L2:
+    links: [L2]
+    role: protection
+    capacity: 1
+  P_work_L3:
+    links: [L3]
+    role: working
+    capacity: 1
+protection:
+  L1: P_prot_L2
+  L3: P_prot_L2

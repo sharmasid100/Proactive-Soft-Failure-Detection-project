@@ -1,0 +1,8 @@
+{
+  "input_dim": 300,
+  "window_n": 60,
+  "n_channels": 5,
+  "hidden_1": 64,
+  "latent": 16,
+  "err_p98": 1.0923811316490173
+}

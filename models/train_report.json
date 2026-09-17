@@ -1,0 +1,19 @@
+{
+  "source": "data/synthetic",
+  "windows": 24350,
+  "nominal_windows": 11480,
+  "horizon_positives": 8837,
+  "k": 13.351104162742601,
+  "s0": 0.8999501139482047,
+  "nominal_fpr_at_0.7": 0.0020034843205574914,
+  "horizon_recall_at_0.7": 0.8868394251442797,
+  "mean_p_fail_nominal": 0.021467940527240714,
+  "mean_p_fail_positive": 0.7582007897542222,
+  "artifacts": [
+    "models/iforest.joblib",
+    "models/autoencoder.pt",
+    "models/autoencoder_meta.json",
+    "models/scaler.joblib",
+    "models/horizon.json"
+  ]
+}

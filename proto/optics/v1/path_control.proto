@@ -1,0 +1,23 @@
+syntax = "proto3";
+package optics.v1;
+
+service PathControl {
+  rpc Reroute (RerouteRequest) returns (RerouteResponse);
+}
+
+message RerouteRequest {
+  string from_path = 1;   // e.g. "P_work_L1"
+  string to_path = 2;     // e.g. "P_prot_L2"
+  string link_id = 3;
+  string reason = 4;
+  double p_fail_10m = 5;
+  double s_if = 6;
+  double s_ae = 7;
+  int32 horizon_s = 8;    // always 600
+  int64 ts_unix_ms = 9;
+}
+
+message RerouteResponse {
+  bool accepted = 1;
+  string message = 2;
+}

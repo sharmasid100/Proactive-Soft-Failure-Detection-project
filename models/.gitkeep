@@ -1,0 +1,2 @@
+# Trained artifacts (autoencoder.pt, iforest.joblib, scaler.joblib, horizon.json)
+# are committed here by `make train`.

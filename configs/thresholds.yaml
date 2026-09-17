@@ -1,0 +1,8 @@
+window_s: 60
+sample_hz: 1
+horizon_s: 600
+p_fail_threshold: 0.7
+consecutive_windows: 3
+hysteresis_s: 300
+hard_osnr_db: 8.0
+hard_ber: 1.0e-3

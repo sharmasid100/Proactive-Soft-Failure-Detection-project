@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+build/
+apps/ingest_cpp/build/
+data/synthetic/*.parquet
+data/synthetic/*.jsonl
+data/synthetic/*.csv
+generated/
+.pytest_cache/
+.DS_Store
+cmake-build-*/
+.cache/
+*.egg-info/
